@@ -36,6 +36,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     //informing listener trigger
     public interface OnTaskActionListener{
 
+        void onTaskFocus(int position);
         void onTaskDelete(Task task);
         void onTaskChanged(Task task);
         boolean onTaskEdit(EditText etTask, int actionId, KeyEvent event);
@@ -72,6 +73,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         //remove text watcher
         holder.etTask.removeCallbacks(null);
+        holder.etTask.setOnFocusChangeListener(null);
 
         if(holder.etTask.getTag() instanceof TextWatcher){
             holder.etTask.removeTextChangedListener((TextWatcher) holder.etTask.getTag());
@@ -121,16 +123,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.etTask.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 setFocusedUI(true, holder);
+                listener.onTaskFocus(holder.getBindingAdapterPosition());
             }else{
                 String text = holder.etTask.getText().toString();
                 if(text.trim().isEmpty()){
                     listener.onTaskDelete(currentTask);
                 }else{
-                    listener.onTaskChanged(currentTask);
                     holder.etTask.postDelayed(() -> {
                         if (holder.getBindingAdapterPosition() != RecyclerView.NO_POSITION && currentId == tasks.get(holder.getBindingAdapterPosition()).taskId) {
                             if (!holder.etTask.isFocused()) {
                                 setFocusedUI(false, holder);
+                                listener.onTaskChanged(currentTask);
                             }
                         }
                     },200);
@@ -138,7 +141,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             }
         });
         holder.etTask.setOnEditorActionListener((v, actionId, event) -> {
-            return listener.onTaskEdit((EditText) v,actionId,event);
+            return listener.onTaskEdit((EditText) v, actionId, event);
         });
     }
 

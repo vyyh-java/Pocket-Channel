@@ -3,6 +3,7 @@ package com.example.in.data.dao;
 import com.example.in.data.entity.Task;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -22,7 +23,7 @@ public interface TaskDao {
     @Delete
     void delete(Task task);
 
-    @Query("SELECT * FROM TASK ORDER BY task_id DESC")
+    @Query("SELECT * FROM TASK ORDER BY is_completed ASC, created_at DESC")
     LiveData<List<Task>> getAllTasks();
 
 }

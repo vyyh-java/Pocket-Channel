@@ -2,6 +2,7 @@ package com.example.in.data.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "TASK")
@@ -19,4 +20,5 @@ public class Task {
 
     @ColumnInfo(name = "task_detail")
     public String taskDetail;
+
 }
