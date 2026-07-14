@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/CBTask"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="8dp"
+        android:background="@drawable/selector_checkbox"
+        android:backgroundTint="@color/success"
+        android:backgroundTintMode="multiply"
+        android:button="@null"
+        android:checked="false"
+        app:layout_constraintEnd_toStartOf="@id/ETTask"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/ETTask"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@null"
+        android:contextClickable="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:fontFamily="serif-monospace"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:focusableInTouchMode="true"
+        app:layout_constraintEnd_toStartOf="@id/IBtnDelete"
+        app:layout_constraintStart_toEndOf="@id/CBTask"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/IBtnDelete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleType="fitCenter"
+        android:src="@drawable/selector_tool"
+        android:tintMode="multiply"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@id/ETTask"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/warning" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
