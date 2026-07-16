@@ -4,15 +4,10 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.in.data.dao.TaskDao;
 import com.example.in.data.entity.Task;
 import com.example.in.repository.TaskRepository;
 import com.example.in.data.database.AppDatabase;
-
-import java.util.ArrayList;
 import java.util.List;
 public class TaskViewModel extends AndroidViewModel {
 

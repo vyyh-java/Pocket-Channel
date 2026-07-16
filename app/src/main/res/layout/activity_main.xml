@@ -156,75 +156,72 @@
         app:layout_constraintStart_toStartOf="@+id/IBtoggler"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RadioGroup
-            android:id="@+id/RGSong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+        <ImageButton
+            android:id="@+id/IBRain"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:src="@drawable/selector_button"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/RBRain"
-                android:layout_width="80dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/selector_button"
-                android:button="@null"
-                android:padding="6dp" />
+        <ImageButton
+            android:id="@+id/IBForest"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:src="@drawable/selector_button"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            app:layout_constraintStart_toStartOf="@id/IBRain"
+            app:layout_constraintTop_toBottomOf="@id/IBRain"/>
 
-            <RadioButton
-                android:id="@+id/RBForest"
-                android:layout_width="80dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/selector_button"
-                android:button="@null"
-                android:padding="6dp" />
+        <ImageButton
+            android:id="@+id/IBCamp"
+            android:layout_width="80dp"
+            android:layout_height="48dp"
+            android:src="@drawable/selector_button"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            app:layout_constraintStart_toStartOf="@id/IBForest"
+            app:layout_constraintTop_toBottomOf="@id/IBForest"/>
 
-            <RadioButton
-                android:id="@+id/RBCamp"
-                android:layout_width="80dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/selector_button"
-                android:button="@null"
-                android:padding="6dp" />
-        </RadioGroup>
 
         <ImageView
             android:id="@+id/IVRain"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:padding="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:src="@drawable/transition_rain"
-            app:layout_constraintStart_toEndOf="@id/RGSong"
-            app:layout_constraintTop_toTopOf="@id/RGSong" />
+            app:layout_constraintBottom_toBottomOf="@+id/IBRain"
+            app:layout_constraintStart_toEndOf="@id/IBRain"
+            app:layout_constraintTop_toTopOf="@id/IBRain" />
 
         <ImageView
             android:id="@+id/IVForest"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="16dp"
-            android:padding="2dp"
+            android:layout_margin="8dp"
             android:src="@drawable/transition_forest"
-            app:layout_constraintStart_toEndOf="@id/RGSong"
-            app:layout_constraintTop_toBottomOf="@id/IVRain" />
+            app:layout_constraintBottom_toBottomOf="@+id/IBForest"
+            app:layout_constraintStart_toEndOf="@id/IBForest"
+            app:layout_constraintTop_toTopOf="@id/IBForest" />
 
         <ImageView
             android:id="@+id/IVCamp"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="16dp"
-            android:padding="2dp"
+            android:layout_margin="8dp"
             android:src="@drawable/transition_camp"
-            app:layout_constraintStart_toEndOf="@id/RGSong"
-            app:layout_constraintTop_toBottomOf="@id/IVForest" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/IBCamp"
+            app:layout_constraintTop_toTopOf="@id/IBCamp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

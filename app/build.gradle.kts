@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.in"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.in"
@@ -50,8 +50,13 @@ dependencies {
     implementation(libs.room.common)
     implementation(libs.constraintlayout.core)
     implementation(libs.databinding.compiler)
+    implementation(libs.media3.session)
     annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("androidx.media3:media3-exoplayer:1.10.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.10.1")
+    implementation("androidx.media3:media3-ui:1.10.1")
+    implementation("androidx.media3:media3-ui-compose-material3:1.10.1")
 }

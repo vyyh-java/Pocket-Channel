@@ -6,16 +6,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.in.R;
 
 public class MainActivity extends AppCompatActivity {
-
-    private NoisePlayerManager noiseManager;
     private TaskHelper taskHelper;
     private ClockTimerHelper timerHelper;
+    private AmbientHelper ambientHelper;
     private View rootView;
 
     @Override
@@ -23,16 +20,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rootView = findViewById(android.R.id.content);
-        noiseManager = new NoisePlayerManager(rootView, this);
+        //noiseManager = new NoisePlayerManager(rootView, this);
         taskHelper = new TaskHelper(rootView, this, this);
         timerHelper = new ClockTimerHelper(rootView, this);
+        ambientHelper = new AmbientHelper(rootView, this, this);
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        noiseManager.release();
+        //noiseManager.release();
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {

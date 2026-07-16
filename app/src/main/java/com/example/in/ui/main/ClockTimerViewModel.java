@@ -5,7 +5,6 @@ import android.os.CountDownTimer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import java.util.Locale;
 
 //timer logic

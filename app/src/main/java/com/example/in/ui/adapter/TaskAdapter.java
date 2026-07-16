@@ -1,7 +1,6 @@
 package com.example.in.ui.adapter;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -11,14 +10,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.in.R;
 import com.example.in.data.entity.Task;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

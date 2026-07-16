@@ -2,7 +2,6 @@ package com.example.in.ui.main;
 
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
@@ -11,19 +10,12 @@ import android.widget.NumberPicker;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.in.R;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;

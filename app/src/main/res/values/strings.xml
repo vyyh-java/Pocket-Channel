@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IN</string>
+    <string name="app_name">Pocket Channel</string>
     <string name="start">Start</string>
     <string name="end">Off</string>
     <string name="timerZero">00:00:00</string>
