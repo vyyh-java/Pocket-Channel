@@ -24,14 +24,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         rootView = findViewById(android.R.id.content);
         taskHelper = new TaskHelper(rootView, this, this);
-        timerHelper = new ClockTimerHelper(rootView, this);
-        ambientHelper = new AmbientHelper(rootView, this, this);
+        timerHelper = new ClockTimerHelper(rootView, this, this);
 
-        timerHelper.getIsTimerStart().observe(this, isStarted -> {
-            if(!isStarted){
-               ambientHelper.stopAmbient();
-            }
-        });
     }
 
     @Override
@@ -54,6 +48,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(event);
     }
-
 }
 

@@ -2,10 +2,13 @@ package com.example.in.ui.main;
 
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextClock;
@@ -29,7 +32,7 @@ public class ClockTimerHelper {
     private NumberPicker npHour;
     private NumberPicker npMinute;
     private NumberPicker npSecond;
-    private ClockTimerViewModel viewModel;
+    private ClockTimerViewModel timerViewModel;
 
     private TextView tvTimer;
     private TextClock tcTimer;
@@ -41,14 +44,22 @@ public class ClockTimerHelper {
 
     private TextView tvStart, tvEnd;
 
+    private final Context context;
+    private final TransitionDrawable tdRain, tdForest, tdCamp;
+    private final ImageButton ibRain, ibForest, ibCamp;
+    private AmbientViewModel ambientViewModel;
+
+    private int previousId = -1;
+
     private static final int  MAX_HOUR = 3;
     private static final int  MAX_MINUTE_SECOND = 59;
     private static final int MIN = 0;
     private final List<NumberPicker> numberPicker = new ArrayList<>();
 
-    public <T extends LifecycleOwner & ViewModelStoreOwner> ClockTimerHelper(View rootView, T owner){
+    public <T extends LifecycleOwner & ViewModelStoreOwner> ClockTimerHelper(View rootView, T owner, Context context){
 
-        viewModel = new ViewModelProvider(owner).get(ClockTimerViewModel.class);
+        this.timerViewModel = new ViewModelProvider(owner).get(ClockTimerViewModel.class);
+        this.ambientViewModel = new ViewModelProvider(owner).get(AmbientViewModel.class);
         npHour = (NumberPicker) rootView.findViewById(R.id.NPHour);
         npMinute = (NumberPicker) rootView.findViewById(R.id.NPMinute);
         npSecond = (NumberPicker) rootView.findViewById(R.id.NPSecond);
@@ -57,7 +68,13 @@ public class ClockTimerHelper {
         btnStartPause = (ImageButton) rootView.findViewById(R.id.IBtoggler);
         tvStart = (TextView) rootView.findViewById(R.id.TVStart);
         tvEnd = (TextView) rootView.findViewById(R.id.TVEnd);
-
+        this.context = context;
+        this.tdRain = (TransitionDrawable) ((ImageView) rootView.findViewById(R.id.IVRain)).getDrawable();
+        this.tdForest = (TransitionDrawable) ((ImageView) rootView.findViewById(R.id.IVForest)).getDrawable();
+        this.tdCamp = (TransitionDrawable) ((ImageView) rootView.findViewById(R.id.IVCamp)).getDrawable();
+        this.ibRain = rootView.findViewById(R.id.IBRain);
+        this.ibForest = rootView.findViewById(R.id.IBForest);
+        this.ibCamp = rootView.findViewById(R.id.IBCamp);
         numberPicker.addAll(List.of(npHour, npMinute, npSecond));
 
         this.llTimer = (LinearLayout) rootView.findViewById(R.id.LLTimer);
@@ -67,16 +84,50 @@ public class ClockTimerHelper {
         setNumberPicker();
         setInterface(false, btnStartPause.isActivated());
 
-        viewModel.getTimerText().observe(owner, timerText -> {
+        setListener(ibRain, R.raw.rain);
+        setListener(ibForest, R.raw.forest);
+        setListener(ibCamp, R.raw.camp);
+
+        //control transition?
+        ambientViewModel.getCurrentPlayingResId().observe(owner, resId -> {
+            //has previous song?
+            if(previousId != -1){
+                animateUnGlow(previousId);
+                setButtonSelected(previousId, false);
+            }
+            //has new song?
+            if(resId != -1){
+                setButtonSelected(resId, true);
+                animateGlow(resId);
+            }else{
+                setButtonSelected(resId, true);
+                animateUnGlow(resId);
+            }
+            previousId = resId;
+        });
+
+        timerViewModel.getTimerText().observe(owner, timerText -> {
             String text = timerText.isEmpty() ? "00:00:00" : timerText;
             tvTimer.setText(text);
         });
 
-        viewModel.getIsTimerStart().observe(owner, isStarted -> {
+        timerViewModel.getIsTimerStart().observe(owner, isStarted -> {
             setBtnUi(isStarted);
             setInterface(false, isStarted);
-            if(!isStarted)
+            if(!isStarted){
                 resetNumberPickers();
+                stopAmbient();
+            }
+        });
+
+        ambientViewModel.getRemainingTimer().observe(owner, millis -> {
+            if(millis != null){
+                if(millis <= 0){
+                    timerViewModel.onFinished();
+                    return;
+                }
+                timerViewModel.onTicked(millis);
+            }
         });
 
         btnStartPause.setOnClickListener(v -> {
@@ -86,9 +137,13 @@ public class ClockTimerHelper {
                     Toast.makeText(v.getContext(), "Please set timer", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                viewModel.startTimer();
+                //send to service using contoller
+                if(timerViewModel.getTimerValue().getValue() != null){
+                    ambientViewModel.startTimer(timerViewModel.getTimerValue().getValue());
+                }
             }else{
-                viewModel.stopTimer();
+                //send to service using controller
+                ambientViewModel.stopTimer();
             }
         });
 
@@ -100,9 +155,6 @@ public class ClockTimerHelper {
             setInterface(false, btnStartPause.isActivated());
         });
     }
-    public LiveData<Boolean> getIsTimerStart() {
-        return viewModel.getIsTimerStart();
-    }
 
     private void setNumberPicker(){
         for(NumberPicker np : numberPicker){
@@ -112,7 +164,7 @@ public class ClockTimerHelper {
             np.setValue(MIN);
             np.setWrapSelectorWheel(true);
             np.setOnValueChangedListener((picker, oldVal, newVal) -> {
-                viewModel.setTimer(npHour.getValue(), npMinute.getValue(), npSecond.getValue());
+                timerViewModel.setTimer(npHour.getValue(), npMinute.getValue(), npSecond.getValue());
             });
         }
     }
@@ -152,4 +204,50 @@ public class ClockTimerHelper {
         tvEnd.setActivated(!isActivated);
     }
 
+    public void stopAmbient(){
+        Integer currentId = ambientViewModel.getCurrentPlayingResId().getValue();
+        if (currentId != null && currentId != -1) {
+            ambientViewModel.stop();
+        } else {
+            //if alarm
+        }
+    }
+
+    private void animateGlow(int id) {
+        TransitionDrawable td = getTransitionDrawableById(id);
+        if (td != null) {
+            td.startTransition(500);
+        }
+    }
+
+    private void animateUnGlow(int id) {
+        TransitionDrawable td = getTransitionDrawableById(id);
+        if (td != null) {
+            td.reverseTransition(500);
+        }
+    }
+
+    private TransitionDrawable getTransitionDrawableById(int id) {
+        if (id == R.raw.rain) return tdRain;
+        if (id == R.raw.forest) return tdForest;
+        if (id == R.raw.camp) return tdCamp;
+        return null;
+    }
+    private void setButtonSelected(int resId, boolean selected) {
+        if (resId == R.raw.rain) ibRain.setSelected(selected);
+        else if (resId == R.raw.forest) ibForest.setSelected(selected);
+        else if (resId == R.raw.camp) ibCamp.setSelected(selected);
+    }
+
+    //control on off
+    private void setListener(ImageButton ib, int resId){
+        ib.setOnClickListener(v -> {
+            boolean isSelected = ib.isSelected();
+            if(!isSelected){
+                ambientViewModel.play(resId);
+            }else{
+                ambientViewModel.stop();
+            }
+        });
+    }
 }
