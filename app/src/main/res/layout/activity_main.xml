@@ -152,8 +152,6 @@
         android:id="@+id/CLControl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/IBtoggler"
         app:layout_constraintStart_toStartOf="@+id/IBtoggler"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -161,11 +159,11 @@
             android:id="@+id/IBRain"
             android:layout_width="80dp"
             android:layout_height="48dp"
-            android:src="@drawable/selector_button"
+            android:background="@null"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:scaleType="fitCenter"
-            android:background="@null"
+            android:src="@drawable/selector_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -173,25 +171,25 @@
             android:id="@+id/IBForest"
             android:layout_width="80dp"
             android:layout_height="48dp"
-            android:src="@drawable/selector_button"
+            android:background="@null"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:scaleType="fitCenter"
-            android:background="@null"
+            android:src="@drawable/selector_button"
             app:layout_constraintStart_toStartOf="@id/IBRain"
-            app:layout_constraintTop_toBottomOf="@id/IBRain"/>
+            app:layout_constraintTop_toBottomOf="@id/IBRain" />
 
         <ImageButton
             android:id="@+id/IBCamp"
             android:layout_width="80dp"
             android:layout_height="48dp"
-            android:src="@drawable/selector_button"
+            android:background="@null"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:scaleType="fitCenter"
-            android:background="@null"
+            android:src="@drawable/selector_button"
             app:layout_constraintStart_toStartOf="@id/IBForest"
-            app:layout_constraintTop_toBottomOf="@id/IBForest"/>
+            app:layout_constraintTop_toBottomOf="@id/IBForest" />
 
 
         <ImageView

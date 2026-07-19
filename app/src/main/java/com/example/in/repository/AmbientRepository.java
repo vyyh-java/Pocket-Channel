@@ -29,10 +29,10 @@ public class AmbientRepository {
     }
 
     public MediaItem convertIntoMediaItem(Ambient ambient){
-        String rawName = ambient.getTitle()+"_glow";
+        String rawName = ambient.getTitle()+"_activated";
         MediaMetadata metadata = new MediaMetadata.Builder()
                 .setTitle(ambient.getTitle())
-                .setArtist("Pocket Ambient")
+                .setArtist("Pocket Channel")
                 .setArtworkUri(Uri.parse(convertIntoUrl(rawName, "drawable", packageName)))
                 .build();
         return new MediaItem.Builder()
@@ -41,11 +41,6 @@ public class AmbientRepository {
                 .setMediaMetadata(metadata)
                 .build();
     }
-
-    /*
-    rain, forest, night/camp
-    *
-    **/
 
     private String convertIntoUrl(String rawName, String dir, String packageName){
         return "android.resource://" + packageName + "/"+dir+"/"+rawName;

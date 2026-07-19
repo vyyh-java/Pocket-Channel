@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transition xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/forest_unglow" />
-    <item android:drawable="@drawable/forest_glow"/>
+    <item android:drawable="@drawable/forest_default" />
+    <item android:drawable="@drawable/forest_activated"/>
 </transition>
