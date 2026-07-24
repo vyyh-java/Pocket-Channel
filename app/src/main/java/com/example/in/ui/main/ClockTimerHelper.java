@@ -85,7 +85,9 @@ public class ClockTimerHelper {
             setInterface(false, isStarted);
             if(!isStarted){
                 resetNumberPickers(binding.NPHour, binding.NPMinute, binding.NPSecond);
-                stopAmbient();
+                if(ambientViewModel.getCurrentPlayingResId() != null && ambientViewModel.getCurrentPlayingResId().getValue() == -1){
+                    stopAmbient();
+                }
             }
         });
 
@@ -104,9 +106,10 @@ public class ClockTimerHelper {
             if(isToStart){
                 if(binding.TVTimer.getText().toString().equals("00:00:00")){
                     Toast.makeText(v.getContext(), "Please set timer", Toast.LENGTH_SHORT).show();
+                    binding.TCTimer.callOnClick();
                     return;
                 }
-                //send to service using contoller
+                //send to service using controller
                 if(timerViewModel.getTimerValue().getValue() != null){
                     ambientViewModel.startTimer(timerViewModel.getTimerValue().getValue());
                 }
@@ -230,8 +233,8 @@ public class ClockTimerHelper {
     }
 
     public void release(){
-        binding = null;
-        timerViewModel = null;
-        ambientViewModel = null;
+        if(binding!=null){
+            binding = null;
+        }
     }
 }

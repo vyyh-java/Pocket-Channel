@@ -34,7 +34,7 @@
             android:centerY="50%" />
         </shape>
     </item>
-    <item android:width="62dp" android:height="62dp" android:gravity="center">
+    <item android:width="58dp" android:height="58dp" android:gravity="center">
         <shape android:shape="oval" >
             <gradient
                 android:angle="90"

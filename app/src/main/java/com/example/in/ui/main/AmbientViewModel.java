@@ -133,8 +133,16 @@ public class AmbientViewModel extends AndroidViewModel {
                     return;
                 }
                 mediaController = controllerFuture.get();
-                mediaController.setRepeatMode(Player.REPEAT_MODE_ONE);
-                updateCurrentPlayingId();
+
+                if (mediaController == null) return;
+
+                if (mediaController.isPlaying()) {
+                    updateCurrentPlayingId();
+                }
+
+                if (playerListener != null) {
+                    mediaController.removeListener(playerListener);
+                }
                 playerListener = new Player.Listener() {
                     @Override
                     public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {

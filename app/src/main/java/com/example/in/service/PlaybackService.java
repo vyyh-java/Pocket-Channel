@@ -1,8 +1,10 @@
 package com.example.in.service;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -123,9 +125,19 @@ public class PlaybackService extends MediaSessionService {
         return mediaSession;
     }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent){
+        if(mediaSession == null) return;
+        Player player = mediaSession.getPlayer();
+        if(!player.getPlayWhenReady() && timer == null){
+            stopSelf();
+        }
+    }
+
 
     @Override
     public void onDestroy() {
+        Log.e("DEBUG_TAG", "onDestroy: media loss");
         super.onDestroy();
         if (mediaSession != null) {
             Player player = mediaSession.getPlayer();
