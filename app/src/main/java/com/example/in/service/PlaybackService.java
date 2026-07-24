@@ -1,6 +1,8 @@
 package com.example.in.service;
 
 
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -28,12 +30,14 @@ public class PlaybackService extends MediaSessionService {
 
     private CountDownTimer timer = null;
 
+    private AlarmManager alarmManager = null;
     private MediaSession mediaSession = null;
     private ExoPlayer player = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         player = new ExoPlayer.Builder(this).build();
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
@@ -45,12 +49,24 @@ public class PlaybackService extends MediaSessionService {
             @NonNull
             @Override
             public MediaSession.ConnectionResult onConnect(@NonNull MediaSession session, @NonNull MediaSession.ControllerInfo controllerInfo) {
-                MediaSession.ConnectionResult.AcceptedResultBuilder connectionResultBuilder = new MediaSession.ConnectionResult.AcceptedResultBuilder(session);
-                SessionCommands sessionCommands = new SessionCommands.Builder()
+                MediaSession.ConnectionResult connectionResult =
+                        MediaSession.Callback.super.onConnect(session, controllerInfo);
+
+                Player.Commands availablePlayerCommands = connectionResult.availablePlayerCommands;
+
+                Player.Commands playerCommands = availablePlayerCommands.buildUpon()
+                        .remove(Player.COMMAND_SEEK_TO_PREVIOUS)
+                        .remove(Player.COMMAND_SEEK_TO_PREVIOUS_MEDIA_ITEM)
+                        .remove(Player.COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM)
+                        .build();
+
+                SessionCommands sessionCommands = connectionResult.availableSessionCommands.buildUpon()
                         .add(new SessionCommand("COMMAND_START_TIMER", Bundle.EMPTY))
                         .add(new SessionCommand("COMMAND_STOP_TIMER", Bundle.EMPTY))
                         .build();
-                return connectionResultBuilder
+
+                return new MediaSession.ConnectionResult.AcceptedResultBuilder(session)
+                        .setAvailablePlayerCommands(playerCommands)
                         .setAvailableSessionCommands(sessionCommands)
                         .build();
             }
@@ -137,7 +153,6 @@ public class PlaybackService extends MediaSessionService {
 
     @Override
     public void onDestroy() {
-        Log.e("DEBUG_TAG", "onDestroy: media loss");
         super.onDestroy();
         if (mediaSession != null) {
             Player player = mediaSession.getPlayer();

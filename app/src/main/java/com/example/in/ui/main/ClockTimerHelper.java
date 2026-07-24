@@ -83,12 +83,6 @@ public class ClockTimerHelper {
         timerViewModel.getIsTimerStart().observe(owner, isStarted -> {
             setBtnUi(isStarted);
             setInterface(false, isStarted);
-            if(!isStarted){
-                resetNumberPickers(binding.NPHour, binding.NPMinute, binding.NPSecond);
-                if(ambientViewModel.getCurrentPlayingResId() != null && ambientViewModel.getCurrentPlayingResId().getValue() == -1){
-                    stopAmbient();
-                }
-            }
         });
 
         ambientViewModel.getRemainingTimer().observe(owner, millis -> {

@@ -28,6 +28,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class AmbientViewModel extends AndroidViewModel {
@@ -68,8 +69,10 @@ public class AmbientViewModel extends AndroidViewModel {
     public void play(int restId) {
         MediaItem mediaItem = getAmbient(restId);
         if (mediaController != null && mediaItem != null) {
-            mediaController.setMediaItem(mediaItem);
-            mediaController.prepare();
+            if(!mediaItem.equals(mediaController.getCurrentMediaItem())){
+                mediaController.setMediaItem(mediaItem);
+                mediaController.prepare();
+            }
             mediaController.play();
         }
     }
@@ -85,8 +88,10 @@ public class AmbientViewModel extends AndroidViewModel {
     private void updateCurrentPlayingId() {
         if (mediaController != null && mediaController.getCurrentMediaItem() != null) {
             try {
-                String mediaId = mediaController.getCurrentMediaItem().mediaId;
-                currentPlayingResId.setValue(Integer.parseInt(mediaId));
+                Integer mediaId = Integer.parseInt(mediaController.getCurrentMediaItem().mediaId);
+                if(!Objects.equals(currentPlayingResId.getValue(), mediaId)){
+                    currentPlayingResId.setValue(mediaId);
+                }
             } catch (NumberFormatException e) {
                 currentPlayingResId.setValue(-1);
             }
@@ -119,7 +124,7 @@ public class AmbientViewModel extends AndroidViewModel {
                     public ListenableFuture<SessionResult> onCustomCommand(@NonNull MediaController controller, @NonNull SessionCommand command, @NonNull Bundle args) {
                         if ("COMMAND_UPDATE_TIMER_UI".equals(command.customAction)) {
                             long remainingMillis = args.getLong("KEY_REMAINING_TIME", 0L);
-                            remainingTimer.postValue(remainingMillis);
+                            remainingTimer.setValue(remainingMillis);
                             return Futures.immediateFuture(new SessionResult(SessionResult.RESULT_SUCCESS));
                         }
                         return Futures.immediateFuture(new SessionResult(SessionError.ERROR_UNKNOWN));
@@ -146,16 +151,18 @@ public class AmbientViewModel extends AndroidViewModel {
                 playerListener = new Player.Listener() {
                     @Override
                     public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-                        if (mediaItem != null) {
-                            try {
-                                currentPlayingResId.setValue(Integer.parseInt(mediaItem.mediaId));
-                            } catch (NumberFormatException e) {
-                                currentPlayingResId.setValue(-1);
-                            }
-                        } else {
+                        updateCurrentPlayingId();
+                    }
+                    @Override
+                    public void onIsPlayingChanged(boolean isPlaying) {
+                        if(isPlaying){
+                            updateCurrentPlayingId();
+                        }
+                        if(!isPlaying && mediaController.getPlaybackState() == Player.STATE_READY){
                             currentPlayingResId.setValue(-1);
                         }
                     }
+
                     @Override
                     public void onPlaybackStateChanged(int playbackState) {
                         if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_ENDED) {
