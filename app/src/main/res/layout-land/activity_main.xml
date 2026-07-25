@@ -19,7 +19,7 @@
         android:background="@drawable/screen_background"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/TVStart"
+        app:layout_constraintEnd_toStartOf="@+id/constraintLayout2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -152,46 +152,43 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/TVStart"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/IBRain"
-            android:layout_width="80dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@null"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/selector_button"
+            android:padding="8dp"
+            android:src="@drawable/selector_button_portrait"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/IBForest"
-            android:layout_width="80dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@null"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/selector_button"
-            app:layout_constraintStart_toStartOf="@id/IBRain"
-            app:layout_constraintTop_toBottomOf="@id/IBRain" />
+            android:padding="8dp"
+            android:src="@drawable/selector_button_portrait"
+            app:layout_constraintStart_toEndOf="@+id/IBRain"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/IBCamp"
-            android:layout_width="80dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@null"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/selector_button"
-            app:layout_constraintStart_toStartOf="@id/IBForest"
-            app:layout_constraintTop_toBottomOf="@id/IBForest" />
+            android:padding="8dp"
+            android:src="@drawable/selector_button_portrait"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/IBForest"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
@@ -200,9 +197,9 @@
             android:layout_height="32dp"
             android:layout_margin="8dp"
             android:src="@drawable/transition_rain"
-            app:layout_constraintBottom_toBottomOf="@+id/IBRain"
-            app:layout_constraintStart_toEndOf="@id/IBRain"
-            app:layout_constraintTop_toTopOf="@id/IBRain" />
+            app:layout_constraintEnd_toEndOf="@+id/IBRain"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/IBRain" />
 
         <ImageView
             android:id="@+id/IVForest"
@@ -210,9 +207,9 @@
             android:layout_height="32dp"
             android:layout_margin="8dp"
             android:src="@drawable/transition_forest"
-            app:layout_constraintBottom_toBottomOf="@+id/IBForest"
-            app:layout_constraintStart_toEndOf="@id/IBForest"
-            app:layout_constraintTop_toTopOf="@id/IBForest" />
+            app:layout_constraintEnd_toEndOf="@+id/IBForest"
+            app:layout_constraintStart_toEndOf="@+id/IBRain"
+            app:layout_constraintTop_toBottomOf="@+id/IBForest" />
 
         <ImageView
             android:id="@+id/IVCamp"
@@ -220,9 +217,9 @@
             android:layout_height="32dp"
             android:layout_margin="8dp"
             android:src="@drawable/transition_camp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/IBCamp"
-            app:layout_constraintTop_toTopOf="@id/IBCamp" />
+            app:layout_constraintEnd_toEndOf="@+id/IBCamp"
+            app:layout_constraintStart_toEndOf="@+id/IBForest"
+            app:layout_constraintTop_toBottomOf="@+id/IBCamp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -264,6 +261,7 @@
         app:layout_constraintTop_toTopOf="@+id/IBtoggler" />
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"

@@ -1,39 +1,28 @@
 package com.example.in.ui.main;
 
-
-import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RotateDrawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.TextClock;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.in.R;
 import com.example.in.databinding.ActivityMainBinding;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
 //control ui, listener
 public class ClockTimerHelper {
+
+    private SoundPool soundPool;
+    private int clickSoundId;
     private ClockTimerViewModel timerViewModel;
 
     private AmbientViewModel ambientViewModel;
@@ -48,6 +37,18 @@ public class ClockTimerHelper {
         this.timerViewModel = new ViewModelProvider(owner).get(ClockTimerViewModel.class);
         this.ambientViewModel = new ViewModelProvider(owner).get(AmbientViewModel.class);
         this.binding = binding;
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(1)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        clickSoundId = soundPool.load(binding.getRoot().getContext(), R.raw.select, 1);
 
         setBtnUi(binding.IBtoggler.isActivated());
         setNumberPicker(binding.NPHour, binding.NPMinute, binding.NPSecond);
@@ -167,7 +168,7 @@ public class ClockTimerHelper {
         RotateDrawable rot = (RotateDrawable) ld.findDrawableByLayerId(R.id.LineTimer);
         if (rot != null) {
             int targetLevel = isActivated ? 8750 : 1250;
-            rot.setAlpha(isActivated ? 255 : 180);
+            rot.setAlpha(isActivated ? 255 : 200);
             rot.setLevel(targetLevel);
         }
         /*
@@ -177,15 +178,6 @@ public class ClockTimerHelper {
         animator.start();*/
         binding.TVStart.setActivated(isActivated);
         binding.TVEnd.setActivated(!isActivated);
-    }
-
-    public void stopAmbient(){
-        Integer currentId = ambientViewModel.getCurrentPlayingResId().getValue();
-        if (currentId != null && currentId != -1) {
-            ambientViewModel.stop();
-        } else {
-            //if alarm
-        }
     }
 
     private void animateGlow(int id) {
@@ -218,6 +210,7 @@ public class ClockTimerHelper {
     private void setListener(ImageButton ib, int resId){
         ib.setOnClickListener(v -> {
             boolean isSelected = ib.isSelected();
+            playClick();
             if(!isSelected){
                 ambientViewModel.play(resId);
             }else{
@@ -226,9 +219,18 @@ public class ClockTimerHelper {
         });
     }
 
+    private void playClick() {
+        soundPool.play(clickSoundId, 1.0f, 1.0f, 0, 0, 1.0f);
+    }
+
     public void release(){
         if(binding!=null){
             binding = null;
         }
+        if(soundPool != null){
+            soundPool.release();
+            soundPool = null;
+        }
     }
+
 }

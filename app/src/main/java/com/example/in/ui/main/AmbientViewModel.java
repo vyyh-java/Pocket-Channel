@@ -3,6 +3,7 @@ package com.example.in.ui.main;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -137,6 +138,7 @@ public class AmbientViewModel extends AndroidViewModel {
                 if (controllerFuture == null || controllerFuture.isCancelled()) {
                     return;
                 }
+
                 mediaController = controllerFuture.get();
 
                 if (mediaController == null) return;
@@ -148,9 +150,13 @@ public class AmbientViewModel extends AndroidViewModel {
                 if (playerListener != null) {
                     mediaController.removeListener(playerListener);
                 }
+
                 playerListener = new Player.Listener() {
                     @Override
                     public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
+                        if(mediaController.getRepeatMode() != Player.REPEAT_MODE_ONE){
+                            mediaController.setRepeatMode(Player.REPEAT_MODE_ONE);
+                        }
                         updateCurrentPlayingId();
                     }
                     @Override
@@ -158,7 +164,7 @@ public class AmbientViewModel extends AndroidViewModel {
                         if(isPlaying){
                             updateCurrentPlayingId();
                         }
-                        if(!isPlaying && mediaController.getPlaybackState() == Player.STATE_READY){
+                        if(!isPlaying && (mediaController.getPlaybackState() == Player.STATE_READY)){
                             currentPlayingResId.setValue(-1);
                         }
                     }
