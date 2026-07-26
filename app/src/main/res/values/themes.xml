@@ -17,6 +17,8 @@
         <item name="colorScreen">@color/screen_blue</item>
         <item name="colorScreenCorner">@color/screen_dark_blue</item>
 
+        <item name="colorButton">@color/button_light</item>
+
         <item name="android:textColorPrimary">@color/text_primary_light</item>
         <item name="colorTextPrimaryInactive">@color/text_primary_light_60</item>
         <item name="android:textColorSecondary">@color/text_secondary_light</item>

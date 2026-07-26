@@ -168,7 +168,7 @@ public class ClockTimerHelper {
         RotateDrawable rot = (RotateDrawable) ld.findDrawableByLayerId(R.id.LineTimer);
         if (rot != null) {
             int targetLevel = isActivated ? 8750 : 1250;
-            rot.setAlpha(isActivated ? 255 : 200);
+            rot.setAlpha(isActivated ? 255 : 100);
             rot.setLevel(targetLevel);
         }
         /*

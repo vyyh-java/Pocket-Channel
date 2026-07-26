@@ -17,6 +17,7 @@
         <!-- Customize your theme here. -->
         <item name="colorScreen">@color/screen_green</item>
         <item name="colorScreenCorner">@color/screen_darkGreen</item>
+        <item name="colorButton">@color/button_dark</item>
 
         <item name="android:textColorPrimary">@color/white</item>
         <item name="colorTextPrimaryInactive">@color/text_primary_dark_60</item>

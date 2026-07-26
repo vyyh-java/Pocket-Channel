@@ -23,7 +23,7 @@ public interface TaskDao {
     @Delete
     void delete(Task task);
 
-    @Query("SELECT * FROM TASK ORDER BY is_completed ASC, created_at ASC")
+    @Query("SELECT * FROM TASK ORDER BY is_completed ASC")
     LiveData<List<Task>> getAllTasks();
 
 }

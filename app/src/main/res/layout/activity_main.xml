@@ -156,7 +156,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/IBtoggler"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
@@ -167,8 +167,10 @@
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/selector_button_portrait"
+            android:tintMode="multiply"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorButton" />
 
         <ImageButton
             android:id="@+id/IBForest"
@@ -178,8 +180,10 @@
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/selector_button_portrait"
+            android:tintMode="multiply"
             app:layout_constraintStart_toEndOf="@+id/IBRain"
-            app:layout_constraintTop_toTopOf="@+id/IBRain" />
+            app:layout_constraintTop_toTopOf="@+id/IBRain"
+            app:tint="?attr/colorButton" />
 
         <ImageButton
             android:id="@+id/IBCamp"
@@ -189,8 +193,10 @@
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/selector_button_portrait"
+            android:tintMode="multiply"
             app:layout_constraintStart_toEndOf="@+id/IBForest"
-            app:layout_constraintTop_toTopOf="@+id/IBForest" />
+            app:layout_constraintTop_toTopOf="@+id/IBForest"
+            app:tint="?attr/colorButton" />
 
 
         <ImageView
@@ -228,9 +234,8 @@
 
     <ImageButton
         android:id="@+id/IBtoggler"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1:1"
         android:background="@null"
         android:clickable="true"
         android:focusable="true"
@@ -238,46 +243,32 @@
         android:scaleType="centerInside"
         android:src="@drawable/knob"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toStartOf="@+id/TVEnd" />
 
     <TextView
         android:id="@+id/TVStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="serif-monospace"
+        android:fontFamily="@font/pixel"
         android:text="@string/start"
         android:textColor="@drawable/selector_activated_text"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/IBtoggler"
-        app:layout_constraintStart_toEndOf="@+id/constraintLayout"
         app:layout_constraintTop_toTopOf="@id/IBtoggler" />
 
     <TextView
         android:id="@+id/TVEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="serif-monospace"
+        android:fontFamily="@font/pixel"
         android:text="@string/stop"
         android:textColor="@drawable/selector_activated_text"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/IBtoggler" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:fontFamily="serif-monospace"
-        android:text="@string/timer_label"
-        android:textColor="@color/text_secondary_light"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/IBtoggler"
-        app:layout_constraintEnd_toEndOf="@id/IBtoggler"
-        app:layout_constraintStart_toStartOf="@id/IBtoggler" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

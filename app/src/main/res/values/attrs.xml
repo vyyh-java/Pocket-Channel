@@ -3,4 +3,5 @@
     <attr name="colorScreen" format="color" />
     <attr name="colorScreenCorner" format="color" />
     <attr name="colorTextPrimaryInactive" format="color" />
+    <attr name="colorButton" format="color" />
 </resources>

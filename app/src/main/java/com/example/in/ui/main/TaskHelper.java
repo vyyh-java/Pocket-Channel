@@ -1,6 +1,7 @@
 package com.example.in.ui.main;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -42,7 +43,10 @@ public class TaskHelper implements TaskAdapter.OnTaskActionListener {
                 LinearSmoothScroller smoothScroller = new LinearSmoothScroller(recyclerView.getContext()) {
                     @Override
                     protected int getVerticalSnapPreference() {
-                        return SNAP_TO_START;
+                        if(Configuration.ORIENTATION_LANDSCAPE == binding.getRoot().getResources().getConfiguration().orientation){
+                            return SNAP_TO_START;
+                        }
+                        return SNAP_TO_ANY;
                     }
                 };
                 smoothScroller.setTargetPosition(position);
@@ -93,22 +97,24 @@ public class TaskHelper implements TaskAdapter.OnTaskActionListener {
                 viewModel.addTask("");
             }
         });
-        ViewCompat.setWindowInsetsAnimationCallback(binding.RVTask,
-            new WindowInsetsAnimationCompat.Callback(WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_STOP) {
-                @NonNull
-                @Override
-                public WindowInsetsCompat onProgress(@NonNull WindowInsetsCompat insets, @NonNull List<WindowInsetsAnimationCompat> runningAnimations) {
-                    int keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-                    binding.RVTask.setPadding(
-                            binding.RVTask.getPaddingLeft(),
-                            binding.RVTask.getPaddingTop(),
-                            binding.RVTask.getPaddingRight(),
-                            keyboardHeight
-                    );
-                    return insets;
-                }
-            }
-        );
+        if(Configuration.ORIENTATION_LANDSCAPE == binding.getRoot().getResources().getConfiguration().orientation){
+            ViewCompat.setWindowInsetsAnimationCallback(binding.RVTask,
+                    new WindowInsetsAnimationCompat.Callback(WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_STOP) {
+                        @NonNull
+                        @Override
+                        public WindowInsetsCompat onProgress(@NonNull WindowInsetsCompat insets, @NonNull List<WindowInsetsAnimationCompat> runningAnimations) {
+                            int keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+                            binding.RVTask.setPadding(
+                                    binding.RVTask.getPaddingLeft(),
+                                    binding.RVTask.getPaddingTop(),
+                                    binding.RVTask.getPaddingRight(),
+                                    keyboardHeight
+                            );
+                            return insets;
+                        }
+                    }
+            );
+        }
 
     }
 
