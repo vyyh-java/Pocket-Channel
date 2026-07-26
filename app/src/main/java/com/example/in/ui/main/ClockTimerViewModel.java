@@ -11,7 +11,7 @@ import java.util.Map;
 //timer logic
 public class ClockTimerViewModel extends ViewModel {
     private final MutableLiveData<String> timerText = new MutableLiveData<>();
-    private final MutableLiveData<Integer> timerValue = new MutableLiveData<>();
+    private final MutableLiveData<Long> timerValue = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isTimerStart = new MutableLiveData<>();
 
     public LiveData<String> getTimerText() {
@@ -25,7 +25,7 @@ public class ClockTimerViewModel extends ViewModel {
         if (Boolean.FALSE.equals(isTimerStart.getValue())) {
             isTimerStart.setValue(true);
         }
-        timerValue.setValue((int) l);
+        timerValue.setValue(l);
         long hour = l / 3600000;
         long minute = (l % 3600000) / 60000;
         long second = (l % 60000) / 1000;
@@ -34,7 +34,7 @@ public class ClockTimerViewModel extends ViewModel {
 
     public void onFinished(){
         timerText.setValue("00:00:00");
-        timerValue.setValue(0);
+        timerValue.setValue(0L);
         isTimerStart.setValue(false);
     }
 
@@ -43,14 +43,15 @@ public class ClockTimerViewModel extends ViewModel {
     }
 
     public void setTimer(int hour, int minute, int second){
-        timerValue.setValue((hour * 3600000) + (minute * 60000) + (second * 1000));
+        Long value = Integer.toUnsignedLong((hour * 3600000) + (minute * 60000) + (second * 1000));
+        timerValue.setValue(value);
         timerText.setValue(format(hour, minute, second));
     }
     private String format(long hour, long minute, long second){
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minute, second);
     }
 
-    public LiveData<Integer> getTimerValue() {
+    public LiveData<Long> getTimerValue() {
         return timerValue;
     }
 

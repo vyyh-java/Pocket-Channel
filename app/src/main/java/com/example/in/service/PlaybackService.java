@@ -1,16 +1,19 @@
 package com.example.in.service;
 
-
 import android.app.AlarmManager;
-import android.content.Context;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
+import androidx.core.app.NotificationCompat;
 import androidx.media3.common.AudioAttributes;
 import androidx.media3.common.C;
 import androidx.media3.common.Player;
@@ -22,23 +25,31 @@ import androidx.media3.session.SessionCommand;
 import androidx.media3.session.SessionCommands;
 import androidx.media3.session.SessionError;
 import androidx.media3.session.SessionResult;
-
+import com.example.in.R;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-public class PlaybackService extends MediaSessionService {
+public class PlaybackService extends MediaSessionService{
 
-    private CountDownTimer timer = null;
+    private Runnable runnable = null;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     private AlarmManager alarmManager = null;
-    private MediaSession mediaSession = null;
-    private ExoPlayer player = null;
+    private static final String CHANNEL_ID = "timer";
+    private static final int NOTIFICATION_ID = 1001;
 
+    private long targetEndMillis = 0L;
+
+    private MediaSession mediaSession = null;
+    private Player player = null;
+
+    @OptIn(markerClass = UnstableApi.class)
     @Override
     public void onCreate() {
         super.onCreate();
 
         player = new ExoPlayer.Builder(this).build();
+
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
@@ -96,43 +107,57 @@ public class PlaybackService extends MediaSessionService {
                 .build();
     }
     private void stopBackendTimer(){
-        if(timer != null){
-            timer.cancel();
-        }
         if(player != null){
             player.pause();
+            player.stop();
+            player.clearMediaItems();
+        }
+        if(runnable != null){
+            handler.removeCallbacks(runnable);
+            runnable = null;
         }
     }
 
     private void startBackendTimer(long totalMillis){
         totalMillis = Math.max(totalMillis, 0);
-        if(timer != null){
-            timer.cancel();
-        }
-        timer = new CountDownTimer(totalMillis, 1000) {
-            @Override
-            public void onFinish() {
-                if(player != null){
-                    player.stop();
-                }
-                if (mediaSession != null) {
-                    SessionCommand updateCmd = new SessionCommand("COMMAND_UPDATE_TIMER_UI", Bundle.EMPTY);
-                    Bundle args = new Bundle();
-                    args.putLong("KEY_REMAINING_TIME", 0L);
-                    mediaSession.broadcastCustomCommand(updateCmd, args);
-                }
-            }
 
+        if(runnable != null){
+            handler.removeCallbacks(runnable);
+            runnable = null;
+        }
+
+        targetEndMillis = System.currentTimeMillis() + totalMillis;
+
+        runnable = new Runnable() {
             @Override
-            public void onTick(long millisUntilFinished) {
-                if (mediaSession != null) {
-                    SessionCommand updateCmd = new SessionCommand("COMMAND_UPDATE_TIMER_UI", Bundle.EMPTY);
-                    Bundle args = new Bundle();
-                    args.putLong("KEY_REMAINING_TIME", millisUntilFinished);
-                    mediaSession.broadcastCustomCommand(updateCmd, args);
+            public void run() {
+                if (runnable == null) return;
+                long remainingMillis = targetEndMillis - System.currentTimeMillis();
+
+                if (remainingMillis > 0) {
+                    if (mediaSession != null) {
+                        SessionCommand updateCmd = new SessionCommand("COMMAND_UPDATE_TIMER_UI", Bundle.EMPTY);
+                        Bundle args = new Bundle();
+                        args.putLong("KEY_REMAINING_TIME", remainingMillis);
+                        mediaSession.broadcastCustomCommand(updateCmd, args);
+                    }
+                    handler.postDelayed(this, 1000);
+                } else {
+                    if (player != null) {
+                        player.stop();
+                    }
+                    if (mediaSession != null) {
+                        SessionCommand updateCmd = new SessionCommand("COMMAND_UPDATE_TIMER_UI", Bundle.EMPTY);
+                        Bundle args = new Bundle();
+                        args.putLong("KEY_REMAINING_TIME", 0L);
+                        mediaSession.broadcastCustomCommand(updateCmd, args);
+                    }
+                    runnable = null;
+                    stopForeground(STOP_FOREGROUND_REMOVE);
                 }
             }
-        }.start();
+        };
+        handler.post(runnable);
     }
 
     @Nullable
@@ -145,9 +170,10 @@ public class PlaybackService extends MediaSessionService {
     public void onTaskRemoved(Intent rootIntent){
         if(mediaSession == null) return;
         Player player = mediaSession.getPlayer();
-        if(!player.getPlayWhenReady() && timer == null){
+        if(!player.getPlayWhenReady() && runnable == null){
             stopSelf();
         }
+        stopForeground(STOP_FOREGROUND_REMOVE);
     }
 
 
@@ -159,6 +185,9 @@ public class PlaybackService extends MediaSessionService {
             mediaSession.release();
             mediaSession = null;
             player.release();
+        }
+        if (runnable != null) {
+            handler.removeCallbacks(runnable);
         }
     }
 }

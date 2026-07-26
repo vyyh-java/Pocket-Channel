@@ -32,11 +32,6 @@
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
-        <receiver
-            android:name=".service.TimerBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
-        </receiver>
     </application>
 
 </manifest>
